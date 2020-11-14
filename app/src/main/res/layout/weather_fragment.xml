@@ -1,13 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.weather.WeatherFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMainInfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        android:background="@color/blue_main"
+        android:padding="24dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tvCityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:drawableStartCompat="@drawable/ic_location_on_24"
+            app:drawableTint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dnepr" />
+
+        <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_location_searching_24"
+            app:layout_constraintBottom_toBottomOf="@id/tvCityName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvCityName"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCityName"
+            tools:text="FRI, 14 nov" />
+
+        <ImageView
+            android:id="@+id/ivMainWeather"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_white_day_cloudy"
+            app:layout_constraintBottom_toBottomOf="@id/tvWind"
+            app:layout_constraintEnd_toStartOf="@id/tvWind"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvTemp" />
+
+        <TextView
+            android:id="@+id/tvTemp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="8dp"
+            android:paddingTop="18dp"
+            android:text="27°/19°"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:drawableStartCompat="@drawable/ic_temp"
+            app:drawableTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivMainWeather"
+            app:layout_constraintTop_toBottomOf="@id/tvDate" />
+
+        <TextView
+            android:id="@+id/tvHumidity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="8dp"
+            android:text="33%"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:drawableStartCompat="@drawable/ic_humidity"
+            app:drawableTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivMainWeather"
+            app:layout_constraintTop_toBottomOf="@id/tvTemp" />
+
+        <TextView
+            android:id="@+id/tvWind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="8dp"
+            android:paddingBottom="18dp"
+            android:text="5 м/сек"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:drawableEndCompat="@drawable/ic_icon_wind_e"
+            app:drawableStartCompat="@drawable/ic_wind"
+            app:drawableTint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivMainWeather"
+            app:layout_constraintTop_toBottomOf="@id/tvHumidity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHourly"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/clMainInfo"
+        tools:listitem="@layout/item_hour" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDaily"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvHourly"
+        tools:listitem="@layout/item_day" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
