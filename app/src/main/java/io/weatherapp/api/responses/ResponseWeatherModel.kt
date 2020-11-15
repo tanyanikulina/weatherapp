@@ -27,8 +27,8 @@ data class CurrentModel(
     , @field:Json(name = "wind_speed") val windSpeed: Float?
     , @field:Json(name = "wind_deg") val windDegrees: Int?
     , @field:Json(name = "weather") val weather: List<WeatherModel>?
-    , @field:Json(name = "rain") val rain: RainModel?
-    , @field:Json(name = "snow") val snow: SnowModel?
+    , @field:Json(name = "rain") val rain: SnowRainModel?
+    , @field:Json(name = "snow") val snow: SnowRainModel?
 )
 
 data class HourlyModel(
@@ -45,8 +45,8 @@ data class HourlyModel(
     , @field:Json(name = "wind_gust") val windGust: Float?
     , @field:Json(name = "pop") val pop: Float?
     , @field:Json(name = "weather") val weather: List<WeatherModel>?
-    , @field:Json(name = "rain") val rain: RainModel?
-    , @field:Json(name = "snow") val snow: SnowModel?
+    , @field:Json(name = "rain") val rain: SnowRainModel?
+    , @field:Json(name = "snow") val snow: SnowRainModel?
 )
 
 data class DailyModel(
@@ -54,7 +54,7 @@ data class DailyModel(
     , @field:Json(name = "sunrise") val sunrise: Long?
     , @field:Json(name = "sunset") val sunset: Long?
     , @field:Json(name = "temp") val temp: TemperatureModel?
-    , @field:Json(name = "feels_like") val feelsLike: FeelsLikeModel?
+    , @field:Json(name = "feels_like") val feelsLike: TemperatureModel?
     , @field:Json(name = "pressure") val pressure: Int?
     , @field:Json(name = "humidity") val humidity: Int?
     , @field:Json(name = "dew_point") val dewPoint: Float?
@@ -65,8 +65,8 @@ data class DailyModel(
     , @field:Json(name = "uvi") val uvi: Float?  //Midday UV index
     , @field:Json(name = "visibility") val visibility: Long? // Average visibility, metres
     , @field:Json(name = "pop") val pop: Float?
-    , @field:Json(name = "rain") val rain: RainModel?
-    , @field:Json(name = "snow") val snow: SnowModel?
+    , @field:Json(name = "rain") val rain: SnowRainModel?
+    , @field:Json(name = "snow") val snow: SnowRainModel?
     , @field:Json(name = "weather") val weather: List<WeatherModel>?
 //    , @field:Json(name = "alerts") val alerts: List<AlertsModel>?
 )
@@ -78,12 +78,7 @@ data class WeatherModel(
     , @field:Json(name = "icon") val icon: String?
 )
 
-data class RainModel(
-    @field:Json(name = "1h") val h1: Float?
-    , @field:Json(name = "3h") val h3: Float?
-)
-
-data class SnowModel(
+data class SnowRainModel(
     @field:Json(name = "1h") val h1: Float?
     , @field:Json(name = "3h") val h3: Float?
 )
@@ -92,13 +87,6 @@ data class TemperatureModel(
     @field:Json(name = "day") val day: Float?
     , @field:Json(name = "min") val min: Float?
     , @field:Json(name = "max") val max: Float?
-    , @field:Json(name = "night") val night: Float?
-    , @field:Json(name = "eve") val eve: Float?
-    , @field:Json(name = "morn") val morn: Float?
-)
-
-data class FeelsLikeModel(
-    @field:Json(name = "day") val day: Float?
     , @field:Json(name = "night") val night: Float?
     , @field:Json(name = "eve") val eve: Float?
     , @field:Json(name = "morn") val morn: Float?

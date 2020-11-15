@@ -26,7 +26,7 @@
             app:drawableTint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Dnipro" />
+            android:text="Dnipro" />
 
         <ImageView
             android:id="@+id/ivLocation"
@@ -73,7 +73,7 @@
             app:drawableStartCompat="@drawable/ic_temp"
             app:drawableTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivMainWeather"
+            app:layout_constraintStart_toStartOf="@id/tvWind"
             app:layout_constraintTop_toBottomOf="@id/tvDate" />
 
         <TextView
@@ -88,7 +88,7 @@
             app:drawableStartCompat="@drawable/ic_humidity"
             app:drawableTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivMainWeather"
+            app:layout_constraintStart_toStartOf="@id/tvWind"
             app:layout_constraintTop_toBottomOf="@id/tvTemp" />
 
         <TextView
@@ -101,12 +101,19 @@
             android:text="5 м/сек"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:drawableEndCompat="@drawable/ic_icon_wind_e"
             app:drawableStartCompat="@drawable/ic_wind"
             app:drawableTint="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ivWind"
             app:layout_constraintStart_toEndOf="@id/ivMainWeather"
             app:layout_constraintTop_toBottomOf="@id/tvHumidity" />
+
+        <ImageView
+            android:id="@+id/ivWind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_icon_wind_e"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvWind" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

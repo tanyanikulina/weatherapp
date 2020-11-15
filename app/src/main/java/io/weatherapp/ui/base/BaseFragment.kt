@@ -1,4 +1,4 @@
-package io.weatherapp.ui
+package io.weatherapp.ui.base
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
