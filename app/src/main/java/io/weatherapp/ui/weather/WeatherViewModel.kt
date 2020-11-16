@@ -16,37 +16,44 @@ import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {
 
-    val weatherRespString = MutableLiveData<String>()
-    val weatherModel = MutableLiveData<ResponseWeatherModel>()
     val currentWeather = MutableLiveData<CurrentWeather>()
     val dailyWeather = MutableLiveData<List<DailyWeather>>()
     val hourlyWeather = MutableLiveData<List<HourlyWeather>>()
     val errorMsg = SingleLiveEvent<String>()
 
-    val repo = WeatherRepository()
+    private val repo = WeatherRepository()
 
-    fun getWeatherLocation(lat: String = "48.450001", lon: String = "34.98333") {
+    init {
+        getWeatherLocation()
+    }
+
+    fun getWeatherLocation(lat: Double = 48.450001, lon: Double = 34.98333) {
 
         GlobalScope.launch {
-            val resp = ApiRepository().getOnecallWeatherLocation()
+            val resp = ApiRepository().getOnecallWeatherLocation(lat, lon)
             when (resp) {
                 is Result.Success -> {
                     GlobalScope.launch(Dispatchers.Main) {
                         val answer = resp.data as ResponseWeatherModel
                         repo.saveNewWeather(answer)
-                        weatherModel.postValue(answer)
-                        currentWeather.postValue(repo.getCurrentWeather())
-                        dailyWeather.postValue(repo.getDailyWeather())
-                        hourlyWeather.postValue(repo.getHourlyWeather())
+                        loadWeatherFromRepository()
                     }
                 }
                 is Result.Error -> {
+                    //todo process error and show msg "Не удалось загрузить новые данные :("
                     errorMsg.postValue(resp.errMsg)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        loadWeatherFromRepository()
+                    }
                 }
             }
-
-            weatherRespString.postValue(resp.toString())
         }
+    }
+
+    private fun loadWeatherFromRepository() {
+        currentWeather.postValue(repo.getCurrentWeather())
+        dailyWeather.postValue(repo.getDailyWeather())
+        hourlyWeather.postValue(repo.getHourlyWeather())
     }
 
 }

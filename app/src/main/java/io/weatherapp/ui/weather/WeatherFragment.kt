@@ -32,20 +32,13 @@ class WeatherFragment : BaseFragment() {
         return inflater.inflate(R.layout.weather_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
         rvDaily.adapter = dayAdapter
         rvHourly.adapter = hourAdapter
-
         pb.isVisible = true
-        viewModel.errorMsg observe {
-            pb.isVisible = false
-            showDialog(requireContext(), null, it)
-        }
-
-        viewModel.getWeatherLocation()
 
         viewModel.currentWeather.observe {
             pb.isVisible = false
@@ -57,11 +50,15 @@ class WeatherFragment : BaseFragment() {
         viewModel.hourlyWeather.observe {
             hourAdapter.setNewData(it)
         }
+        viewModel.errorMsg observe {
+            pb.isVisible = false
+            showDialog(requireContext(), null, it)
+        }
 
         ivLocation.setOnClickListener {
             findNavController().navigate(R.id.action_weatherFragment_to_mapsFragment)
         }
-
+        checkBackStack()
     }
 
     private fun fillMainWeather(weather: CurrentWeather) {
@@ -79,6 +76,22 @@ class WeatherFragment : BaseFragment() {
         ivMainWeather.setImageDrawable(
             resources.getDrawable(ImageUtils.getWeatherRes(weather.weather?.get(0)?.main ?: ""))
         )
+    }
+
+    private fun checkBackStack() {
+        var lat: Double
+        var lon: Double
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Pair<Double, Double>>(
+            "lat_lon"
+        )
+            ?.observe {
+                lat = it.first
+                lon = it.second
+                findNavController().currentBackStackEntry?.savedStateHandle?.remove<Double>("lat")
+
+                pb.isVisible = true
+                viewModel.getWeatherLocation(lat, lon)
+            }
     }
 
 }

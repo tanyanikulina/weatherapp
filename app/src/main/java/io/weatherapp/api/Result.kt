@@ -17,5 +17,4 @@ val ERROR_JSON_PARSE = -5
 sealed class Result<out T : Any> {
     data class Success<out T : Any>(val data: T) : Result<T>()
     data class Error(val errorCode: Int = -1, var errMsg: String = "") : Result<Nothing>()
-    data class ErrorTyped<out T : Any>(val errorCode: Int, val errData: T?) : Result<T>()
 }

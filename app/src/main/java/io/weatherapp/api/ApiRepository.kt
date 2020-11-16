@@ -13,14 +13,14 @@ class ApiRepository {
     val apiInterface by lazy { ApiFactory.generateApi() }
 
     suspend fun getOnecallWeatherLocation(
-        lat: String = "48.450001",
-        lon: String = "34.98333"
+        lat: Double = 48.450001,
+        lon: Double = 34.98333
     ): Result<Any>? {
         val call: suspend () -> Response<ResponseWeatherModel> =
             {
                 val params = HashMap<String, String>()
-                params.put("lat", lat)
-                params.put("lon", lon)
+                params.put("lat", lat.toString())
+                params.put("lon", lon.toString())
                 params.put("appid", API_KEY)
                 params.put("units", "metric")
                 params.put("exclude", "minutely")
@@ -49,8 +49,9 @@ class ApiRepository {
         } catch (e: Exception) {
             response = Result.Error(errMsg = e.message ?: "")
             when (e) {
-                is SocketTimeoutException -> response = Result.Error(ERROR_TIMEOUT)
-                is UnknownHostException -> response = Result.Error(ERROR_NO_INTERNET)
+                is SocketTimeoutException -> response = Result.Error(ERROR_TIMEOUT, e.message ?: "")
+                is UnknownHostException -> response =
+                    Result.Error(ERROR_NO_INTERNET, e.message ?: "")
                 is JsonDataException -> response = Result.Error(ERROR_JSON_PARSE, e.message ?: "")
             }
         }

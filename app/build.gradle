@@ -60,6 +60,8 @@ dependencies {
     //Okhttp3
     implementation "com.squareup.okhttp3:okhttp:4.2.2"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    //Location
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
