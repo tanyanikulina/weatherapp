@@ -23,7 +23,7 @@ class ApiRepository {
                 params.put("lon", lon)
                 params.put("appid", API_KEY)
                 params.put("units", "metric")
-                params.put("exclude", "daily")
+                params.put("exclude", "minutely")
 //                params.put("lang", "ru")
 
                 apiInterface.getOnecallWeather(params)

@@ -67,8 +67,8 @@ open class DailyWeather(
     , var windGust: Float? = null
     , var pop: Float? = null
     , var weather: RealmList<ItemWeather>? = null
-    , var rain: SnowRainWeather? = null
-    , var snow: SnowRainWeather? = null
+    , var rain: Float? = null
+    , var snow: Float? = null
 ) : RealmObject()
 
 open class ItemWeather(

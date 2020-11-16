@@ -85,11 +85,11 @@ class ModelToEntityMapper {
             weather.windDegrees = it.windDegrees
             weather.windGust = it.windGust
             weather.pop = it.pop
+            weather.rain = it.rain
+            weather.snow = it.snow
             it.temp?.let { weather.temp = createTemperature(it) }
             it.feelsLike?.let { weather.feelsLike = createTemperature(it) }
             it.weather?.let { weather.weather = createItemWeather(it) }
-            it.rain?.let { weather.rain = createSnowRain(it) }
-            it.snow?.let { weather.snow = createSnowRain(it) }
             list.add(weather)
         }
         return list

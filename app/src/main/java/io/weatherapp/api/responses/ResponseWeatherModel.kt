@@ -65,8 +65,8 @@ data class DailyModel(
     , @field:Json(name = "uvi") val uvi: Float?  //Midday UV index
     , @field:Json(name = "visibility") val visibility: Long? // Average visibility, metres
     , @field:Json(name = "pop") val pop: Float?
-    , @field:Json(name = "rain") val rain: SnowRainModel?
-    , @field:Json(name = "snow") val snow: SnowRainModel?
+    , @field:Json(name = "rain") val rain: Float?
+    , @field:Json(name = "snow") val snow: Float?
     , @field:Json(name = "weather") val weather: List<WeatherModel>?
 //    , @field:Json(name = "alerts") val alerts: List<AlertsModel>?
 )
