@@ -48,13 +48,13 @@ class WeatherFragment : BaseFragment() {
 
         rvDaily.adapter = dayAdapter
         rvHourly.adapter = hourAdapter
-        pb.isVisible = true
+        showLoading(true)
 
         viewModel.cityName.observe {
             tvCityName.text = it
         }
         viewModel.currentWeather.observe {
-            pb.isVisible = false
+            showLoading(false)
             fillMainWeather(it)
         }
         viewModel.dailyWeather.observe {
@@ -64,13 +64,19 @@ class WeatherFragment : BaseFragment() {
             hourAdapter.setNewData(it)
         }
         viewModel.errorMsg observe {
-            pb.isVisible = false
-            showDialog(requireContext(), null, it)
+            showLoading(false)
+            showDialog(requireContext(), null, getString(R.string.error_load))
         }
 
         ivLocation.setOnClickListener {
             findNavController().navigate(R.id.action_weatherFragment_to_mapsFragment)
         }
+
+        rlSwipe.setOnRefreshListener {
+            showLoading(true)
+            viewModel.refreshClicked()
+        }
+
         checkBackStack()
     }
 
@@ -91,19 +97,25 @@ class WeatherFragment : BaseFragment() {
         )
     }
 
-    private fun checkBackStack() {
-        var city: CityModel
+    private fun showLoading(isLoading: Boolean) {
+        clTop.isEnabled = !isLoading
+        pb.isVisible = isLoading
+        if (!isLoading)
+            rlSwipe.isRefreshing = false
+    }
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Triple<String, String, String>>(
+    private fun checkBackStack() {
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<CityModel>(
             "location"
         )
             ?.observe {
-                city = CityModel(it.first, it.second, it.third)
-                findNavController().currentBackStackEntry?.savedStateHandle?.remove<Triple<String, String, String>>(
+                val city = CityModel(it.name, it.lat, it.lon)
+                findNavController().currentBackStackEntry?.savedStateHandle?.remove<CityModel>(
                     "location"
                 )
 
-                pb.isVisible = true
+                showLoading(true)
                 viewModel.saveNewCity(city)
             }
     }

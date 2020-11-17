@@ -14,9 +14,9 @@ class Preferences(val context: Context) {
     private val CITY_LON = "CITY_LON"
 
     fun saveCity(city: CityModel) {
-        sp.edit(commit = true) { putString(CITY_LAT, city.name) }
-        sp.edit(commit = true) { putString(CITY_LON, city.lat) }
-        sp.edit(commit = true) { putString(CITY_NAME, city.lon) }
+        sp.edit(commit = true) { putString(CITY_LAT, city.lat) }
+        sp.edit(commit = true) { putString(CITY_LON, city.lon) }
+        sp.edit(commit = true) { putString(CITY_NAME, city.name) }
     }
 
     fun getCity(): CityModel {

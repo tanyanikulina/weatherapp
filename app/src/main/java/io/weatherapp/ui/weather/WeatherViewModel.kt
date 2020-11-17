@@ -29,10 +29,10 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
     init {
         val city = pref.getCity()
         cityName.postValue(city.name)
-        getWeatherLocation(city.lat, city.lon)
+        getWeatherLocation(city.lat!!, city.lon!!)
     }
 
-    fun getWeatherLocation(lat: String, lon: String) {
+    private fun getWeatherLocation(lat: String, lon: String) {
 
         GlobalScope.launch {
             val resp = ApiRepository().getOnecallWeatherLocation(lat, lon)
@@ -45,7 +45,6 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
                     }
                 }
                 is Result.Error -> {
-                    //todo process error and show msg "Не удалось загрузить новые данные :("
                     errorMsg.postValue(resp.errMsg)
                     GlobalScope.launch(Dispatchers.Main) {
                         loadWeatherFromRepository()
@@ -58,7 +57,7 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
     fun saveNewCity(city: CityModel) {
         pref.saveCity(city)
         cityName.postValue(city.name)
-        getWeatherLocation(city.lat, city.lon)
+        getWeatherLocation(city.lat!!, city.lon!!)
     }
 
     fun dayClicked(position: Int) {
@@ -88,6 +87,11 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
 
         currentWeather.postValue(repo.getCurrentWeather())
         hourlyWeather.postValue(repo.getHourlyWeather())
+    }
+
+    fun refreshClicked() {
+        val city = pref.getCity()
+        getWeatherLocation(city.lat!!, city.lon!!)
     }
 
 }

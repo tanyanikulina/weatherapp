@@ -24,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.weatherapp.R
+import io.weatherapp.models.CityModel
 import java.util.*
 
 class MapsFragment : Fragment() {
@@ -80,7 +81,7 @@ class MapsFragment : Fragment() {
         requestLocationPermissions()
     }
 
-    fun requestLocationPermissions() {
+    private fun requestLocationPermissions() {
         val PERMISSION_LOCATION = 454545
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && ActivityCompat.checkSelfPermission(
@@ -100,7 +101,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    fun findLocation(onFound: (Location) -> Unit) {
+    private fun findLocation(onFound: (Location) -> Unit) {
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED &&
@@ -121,14 +122,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    fun goBackWithParams(cityName: String, lat: Double, lon: Double) {
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(
-            "location", Triple(cityName, lat.toString(), lon.toString())
-        )
-        findNavController().popBackStack()
-    }
-
-    fun findCityName(lat: Double, lon: Double): String {
+    private fun findCityName(lat: Double, lon: Double): String {
         val geocoder = Geocoder(context, Locale.getDefault())
         val addresses: List<Address> = geocoder.getFromLocation(lat, lon, 1)
         if (addresses.isNotEmpty()) {
@@ -137,7 +131,7 @@ class MapsFragment : Fragment() {
         return ""
     }
 
-    fun addMarkerForLocation(map: GoogleMap, lat: Double, lon: Double) {
+    private fun addMarkerForLocation(map: GoogleMap, lat: Double, lon: Double) {
         val myLocation = LatLng(lat, lon)
         myLocationMarker = MarkerOptions().position(myLocation).title("Marker in my location")
         map.addMarker(myLocationMarker)
@@ -156,4 +150,12 @@ class MapsFragment : Fragment() {
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
+
+    fun goBackWithParams(cityName: String, lat: Double, lon: Double) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            "location", CityModel(cityName, lat.toString(), lon.toString())
+        )
+        findNavController().popBackStack()
+    }
+
 }
