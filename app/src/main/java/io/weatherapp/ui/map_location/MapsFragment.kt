@@ -1,7 +1,6 @@
 package io.weatherapp.ui.map_location
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -31,31 +30,24 @@ class MapsFragment : Fragment() {
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var viewModel: MapsViewModel
+    private lateinit var mMap: GoogleMap
+    private lateinit var myLocationMarker: MarkerOptions
 
-    //todo remove SuppressLint
-    @SuppressLint("MissingPermission")
     private val callback = OnMapReadyCallback { googleMap ->
 
+        mMap = googleMap
+
         googleMap.setOnMapClickListener {
+
             googleMap.clear()
             googleMap.addMarker(MarkerOptions().position(it))
-
-            var cityName = ""
-            val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses: List<Address> = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-            if (addresses.isNotEmpty()) {
-                cityName = addresses[0].getAddressLine(0) ?: ""
-            }
+            val cityName = findCityName(it.latitude, it.longitude)
 
             googleMap.animateCamera(
                 CameraUpdateFactory.newLatLng(it),
                 object : GoogleMap.CancelableCallback {
                     override fun onFinish() {
-                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                            "location",
-                            Triple(cityName, it.latitude.toString(), it.longitude.toString())
-                        )
-                        findNavController().popBackStack()
+                        goBackWithParams(cityName, it.latitude, it.longitude)
                     }
 
                     override fun onCancel() {
@@ -64,34 +56,10 @@ class MapsFragment : Fragment() {
                 })
         }
 
-        if (ActivityCompat.checkSelfPermission(
-                requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            //todo maybe set marker to saved city
-//            Toast.makeText(requireContext(), "No location :(", Toast.LENGTH_SHORT).show()
-        } else {
-//            googleMap.isMyLocationEnabled = true
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener(requireActivity()) { location: Location? ->
-                    location?.let {
-                        val myLocation = LatLng(it.latitude, it.longitude)
-                        googleMap.addMarker(
-                            MarkerOptions().position(myLocation).title("Marker in my location")
-                        )
-                        googleMap.animateCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                myLocation,
-                                12.0f
-                            )
-                        )
-                    }
-                }
-        }
+        if (!::myLocationMarker.isInitialized)
+            findLocation {
+                addMarkerForLocation(googleMap, it.latitude, it.longitude)
+            }
     }
 
     override fun onCreateView(
@@ -109,11 +77,10 @@ class MapsFragment : Fragment() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-        requestGpsPermissions()
-
+        requestLocationPermissions()
     }
 
-    fun requestGpsPermissions() {
+    fun requestLocationPermissions() {
         val PERMISSION_LOCATION = 454545
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
             && ActivityCompat.checkSelfPermission(
@@ -133,11 +100,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    fun findLocation(onFound: (Location) -> Unit) {
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED &&
@@ -146,9 +109,50 @@ class MapsFragment : Fragment() {
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(requireContext(), "No location :(", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.no_location), Toast.LENGTH_SHORT)
+                .show()
         } else {
-            //todo find location and add to the map
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener(requireActivity()) { location: Location? ->
+                    location?.let {
+                        onFound(location)
+                    }
+                }
+        }
+    }
+
+    fun goBackWithParams(cityName: String, lat: Double, lon: Double) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            "location", Triple(cityName, lat.toString(), lon.toString())
+        )
+        findNavController().popBackStack()
+    }
+
+    fun findCityName(lat: Double, lon: Double): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses: List<Address> = geocoder.getFromLocation(lat, lon, 1)
+        if (addresses.isNotEmpty()) {
+            return addresses[0].getAddressLine(0) ?: ""
+        }
+        return ""
+    }
+
+    fun addMarkerForLocation(map: GoogleMap, lat: Double, lon: Double) {
+        val myLocation = LatLng(lat, lon)
+        myLocationMarker = MarkerOptions().position(myLocation).title("Marker in my location")
+        map.addMarker(myLocationMarker)
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 12.0f))
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (::mMap.isInitialized) {
+            findLocation {
+                addMarkerForLocation(mMap, it.latitude, it.longitude)
+            }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }

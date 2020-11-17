@@ -80,8 +80,7 @@ class WeatherFragment : BaseFragment() {
             DateUtils.formatDateFromMillis(weather.receiveDateMillis(), DF_WEEK_DAY_MONTH)
 
         tvTemp.text = weather.receiveTemp()
-//        tvHumidity.text = getString(R.string.humidity, weather.receiveHumidity())
-        tvHumidity.text = weather.receiveHumidity() + "%"
+        tvHumidity.text = weather.receiveHumidity()
         tvWind.text = getString(R.string.wind_speed, weather.receiveWindSpeed())
 
         ivWind.setImageDrawable(

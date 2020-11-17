@@ -61,7 +61,7 @@ open class CurrentWeather(
     }
 
     override fun receiveHumidity(): String {
-        return (humidity ?: 0).toString()
+        return (humidity ?: 0).toString() + "%"
     }
 
     override fun receiveWindSpeed(): String {
@@ -125,7 +125,7 @@ open class DailyWeather(
     }
 
     override fun receiveHumidity(): String {
-        return (humidity ?: 0).toString()
+        return (humidity ?: 0).toString() + "%"
     }
 
     override fun receiveWindSpeed(): String {
