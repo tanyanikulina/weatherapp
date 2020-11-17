@@ -3,4 +3,5 @@
     <string name="ok_">OK</string>
     <string name="wind_speed">%1$s м/сек</string>
     <string name="humidity">%1$s \%</string>
+    <string name="humidity_percent">%1$s %</string>
 </resources>

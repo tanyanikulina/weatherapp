@@ -5,8 +5,12 @@ import androidx.lifecycle.ViewModel
 import io.weatherapp.api.ApiRepository
 import io.weatherapp.api.Result
 import io.weatherapp.api.responses.ResponseWeatherModel
-import io.weatherapp.data.*
+import io.weatherapp.data.AbstractWeather
+import io.weatherapp.data.HourlyWeather
+import io.weatherapp.data.Preferences
+import io.weatherapp.data.WeatherRepository
 import io.weatherapp.models.CityModel
+import io.weatherapp.models.DayModel
 import io.weatherapp.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -16,7 +20,7 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
 
     val cityName = MutableLiveData<String>()
     val currentWeather = MutableLiveData<AbstractWeather>()
-    val dailyWeather = MutableLiveData<List<DailyWeather>>()
+    val dailyWeather = MutableLiveData<List<DayModel>>()
     val hourlyWeather = MutableLiveData<List<HourlyWeather>>()
     val errorMsg = SingleLiveEvent<String>()
 
@@ -57,9 +61,32 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
         getWeatherLocation(city.lat, city.lon)
     }
 
+    fun dayClicked(position: Int) {
+
+        val list = ArrayList<DayModel>()
+        list.addAll(dailyWeather.value as List<DayModel>)
+        if (list.size > position + 1) {
+            list.forEach { it.isSelected = false }
+            list[position].isSelected = true
+        }
+        dailyWeather.postValue(list)
+        currentWeather.postValue(list[position].dayWeather)
+    }
+
     private fun loadWeatherFromRepository() {
+
+        repo.getDailyWeather()?.let { list ->
+            val listDailyWeather = ArrayList<DayModel>()
+            list.forEach {
+                listDailyWeather.add(DayModel(it, false))
+            }
+            if (listDailyWeather.size > 0) {
+                listDailyWeather[0].isSelected = true
+            }
+            dailyWeather.postValue(listDailyWeather)
+        }
+
         currentWeather.postValue(repo.getCurrentWeather())
-        dailyWeather.postValue(repo.getDailyWeather())
         hourlyWeather.postValue(repo.getHourlyWeather())
     }
 

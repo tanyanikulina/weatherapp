@@ -25,8 +25,8 @@ class WeatherFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: WeatherViewModel
-    private var dayAdapter: DayAdapter = DayAdapter()
-    private var hourAdapter: HourAdapter = HourAdapter()
+    private lateinit var dayAdapter: DayAdapter
+    private lateinit var hourAdapter: HourAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +40,11 @@ class WeatherFragment : BaseFragment() {
 
         val sp = Preferences(requireContext())
         viewModel = ViewModelProvider(this, ViewModelFactory(sp)).get(WeatherViewModel::class.java)
+
+        hourAdapter = HourAdapter()
+        dayAdapter = DayAdapter {
+            viewModel.dayClicked(it)
+        }
 
         rvDaily.adapter = dayAdapter
         rvHourly.adapter = hourAdapter
@@ -75,7 +80,8 @@ class WeatherFragment : BaseFragment() {
             DateUtils.formatDateFromMillis(weather.receiveDateMillis(), DF_WEEK_DAY_MONTH)
 
         tvTemp.text = weather.receiveTemp()
-        tvHumidity.text = getString(R.string.humidity, weather.receiveHumidity())
+//        tvHumidity.text = getString(R.string.humidity, weather.receiveHumidity())
+        tvHumidity.text = weather.receiveHumidity() + "%"
         tvWind.text = getString(R.string.wind_speed, weather.receiveWindSpeed())
 
         ivWind.setImageDrawable(

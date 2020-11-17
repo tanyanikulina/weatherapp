@@ -1,22 +1,25 @@
 package io.weatherapp.ui.weather
 
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import io.weatherapp.R
-import io.weatherapp.data.DailyWeather
+import io.weatherapp.models.DayModel
 import io.weatherapp.utils.DateUtils
 import io.weatherapp.utils.DateUtils.DF_DAY_OF_WEEK
 import io.weatherapp.utils.ImageUtils
 
-class DayAdapter() : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
+class DayAdapter(val onDayClick: (position: Int) -> Unit) :
+    RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
-    val days = mutableListOf<DailyWeather>()
+    val days = mutableListOf<DayModel>()
 
-    fun setNewData(newDays: List<DailyWeather>) {
+    fun setNewData(newDays: List<DayModel>) {
         days.clear()
         days.addAll(newDays)
         notifyDataSetChanged()
@@ -39,23 +42,44 @@ class DayAdapter() : RecyclerView.Adapter<DayAdapter.DayViewHolder>() {
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
 
-        val day = days[position]
+        val day = days[position].dayWeather
+        val isSelected = days[position].isSelected
 
-        holder.tvDay.text = DateUtils.formatDateFromMillis((day.date ?: 0L) * 1000L, DF_DAY_OF_WEEK)
-        holder.tvTemp.text = day.temp?.day.toString() + "°/" + day.temp?.night.toString() + "°"
+        holder.tvDay.text = DateUtils.formatDateFromMillis(day.receiveDateMillis(), DF_DAY_OF_WEEK)
+        holder.tvTemp.text = day.receiveTemp()
         holder.ivWeather.setImageDrawable(
-            holder.itemView.context.getDrawable(
-                ImageUtils.getWeatherRes(day.weather?.get(0)?.main ?: "")
-            )
+            holder.itemView.context.getDrawable(ImageUtils.getWeatherRes(day.receiveWeather()))
         )
 
-//        holder.itemView.setOnClickListener {
-//
-//        }
+        if (isSelected) {
+            setViewColor(
+                holder,
+                holder.itemView.context.resources.getColor(R.color.blue_light),
+                holder.itemView.context.resources.getColor(R.color.blue_secondary)
+            )
+        } else {
+            setViewColor(
+                holder,
+                holder.itemView.context.resources.getColor(R.color.white),
+                holder.itemView.context.resources.getColor(R.color.black)
+            )
+        }
+
+        holder.itemView.setOnClickListener {
+            onDayClick(position)
+        }
 
     }
 
+    private fun setViewColor(holder: DayViewHolder, viewColor: Int, textColor: Int) {
+        holder.clMain.background.setTint(viewColor)
+        holder.tvDay.setTextColor(textColor)
+        holder.tvTemp.setTextColor(textColor)
+        holder.ivWeather.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+    }
+
     class DayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val clMain: ConstraintLayout = itemView.findViewById(R.id.clMain) as ConstraintLayout
         val tvDay: TextView = itemView.findViewById(R.id.tvDay) as TextView
         val tvTemp: TextView = itemView.findViewById(R.id.tvTemp) as TextView
         val ivWeather: ImageView = itemView.findViewById(R.id.ivWeather) as ImageView
