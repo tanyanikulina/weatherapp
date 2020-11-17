@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class WeatherViewModel(val pref: Preferences) : ViewModel() {
 
     val cityName = MutableLiveData<String>()
-    val currentWeather = MutableLiveData<CurrentWeather>()
+    val currentWeather = MutableLiveData<AbstractWeather>()
     val dailyWeather = MutableLiveData<List<DailyWeather>>()
     val hourlyWeather = MutableLiveData<List<HourlyWeather>>()
     val errorMsg = SingleLiveEvent<String>()

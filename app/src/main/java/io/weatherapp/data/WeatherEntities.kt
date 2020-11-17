@@ -13,6 +13,23 @@ open class TotalWeather(
     , var daily: RealmList<DailyWeather>? = null
 ) : RealmObject()
 
+interface AbstractWeather {
+
+    fun receiveWeather(): String
+
+    fun receiveDateMillis(): Long
+
+    fun receiveTemp(): String
+
+    fun receiveHumidity(): String
+
+    fun receiveWindSpeed(): String
+
+    fun receiveWindDegrees(): Int
+
+
+}
+
 open class CurrentWeather(
     var date: Long? = null
     , var sunrise: Long? = null
@@ -30,7 +47,31 @@ open class CurrentWeather(
     , var weather: RealmList<ItemWeather>? = null
     , var rain: SnowRainWeather? = null
     , var snow: SnowRainWeather? = null
-) : RealmObject()
+) : RealmObject(), AbstractWeather {
+    override fun receiveWeather(): String {
+        return weather?.get(0)?.main ?: ""
+    }
+
+    override fun receiveDateMillis(): Long {
+        return (date ?: 0L) * 1000L
+    }
+
+    override fun receiveTemp(): String {
+        return temp.toString() + "°"
+    }
+
+    override fun receiveHumidity(): String {
+        return (humidity ?: 0).toString()
+    }
+
+    override fun receiveWindSpeed(): String {
+        return windSpeed.toString()
+    }
+
+    override fun receiveWindDegrees(): Int {
+        return windDegrees ?: 0
+    }
+}
 
 open class HourlyWeather(
     var date: Long? = null
@@ -69,7 +110,33 @@ open class DailyWeather(
     , var weather: RealmList<ItemWeather>? = null
     , var rain: Float? = null
     , var snow: Float? = null
-) : RealmObject()
+) : RealmObject(), AbstractWeather {
+
+    override fun receiveWeather(): String {
+        return weather?.get(0)?.main ?: ""
+    }
+
+    override fun receiveDateMillis(): Long {
+        return (date ?: 0L) * 1000L
+    }
+
+    override fun receiveTemp(): String {
+        return (temp?.max ?: 0f).toString() + "°/" + (temp?.min ?: 0f).toString() + "°"
+    }
+
+    override fun receiveHumidity(): String {
+        return (humidity ?: 0).toString()
+    }
+
+    override fun receiveWindSpeed(): String {
+        return windSpeed.toString()
+    }
+
+    override fun receiveWindDegrees(): Int {
+        return windDegrees ?: 0
+    }
+
+}
 
 open class ItemWeather(
     var id: Int? = null

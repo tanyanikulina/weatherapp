@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.weatherapp.R
-import io.weatherapp.data.CurrentWeather
+import io.weatherapp.data.AbstractWeather
 import io.weatherapp.data.Preferences
 import io.weatherapp.models.CityModel
 import io.weatherapp.ui.base.BaseFragment
@@ -69,20 +69,20 @@ class WeatherFragment : BaseFragment() {
         checkBackStack()
     }
 
-    private fun fillMainWeather(weather: CurrentWeather) {
+    private fun fillMainWeather(weather: AbstractWeather) {
 
         tvDate.text =
-            DateUtils.formatDateFromMillis((weather.date ?: 0L) * 1000L, DF_WEEK_DAY_MONTH)
+            DateUtils.formatDateFromMillis(weather.receiveDateMillis(), DF_WEEK_DAY_MONTH)
 
-        tvTemp.text = weather.temp.toString() + "°"
-        tvHumidity.text = weather.humidity?.toString() + "%"
-        tvWind.text = weather.windSpeed.toString() + " м/сек"
+        tvTemp.text = weather.receiveTemp()
+        tvHumidity.text = getString(R.string.humidity, weather.receiveHumidity())
+        tvWind.text = getString(R.string.wind_speed, weather.receiveWindSpeed())
 
         ivWind.setImageDrawable(
-            resources.getDrawable(ImageUtils.getWindRes(weather.windDegrees ?: 0))
+            resources.getDrawable(ImageUtils.getWindRes(weather.receiveWindDegrees()))
         )
         ivMainWeather.setImageDrawable(
-            resources.getDrawable(ImageUtils.getWeatherRes(weather.weather?.get(0)?.main ?: ""))
+            resources.getDrawable(ImageUtils.getWeatherRes(weather.receiveWeather()))
         )
     }
 
