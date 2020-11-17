@@ -9,19 +9,11 @@
         android:id="@+id/weatherFragment"
         android:name="io.weatherapp.ui.weather.WeatherFragment"
         android:label="weather_fragment"
-        tools:layout="@layout/weather_fragment">
-        <action
-            android:id="@+id/action_weatherFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
+        tools:layout="@layout/fragment_weather">
         <action
             android:id="@+id/action_weatherFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="io.weatherapp.ui.map.MapFragment"
-        android:label="map_fragment"
-        tools:layout="@layout/map_fragment" />
     <fragment
         android:id="@+id/mapsFragment"
         android:name="io.weatherapp.ui.map_location.MapsFragment"

@@ -3,6 +3,8 @@ package io.weatherapp.ui.map_location
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import io.weatherapp.R
+import java.util.*
 
 class MapsFragment : Fragment() {
 
@@ -37,17 +40,27 @@ class MapsFragment : Fragment() {
             googleMap.clear()
             googleMap.addMarker(MarkerOptions().position(it))
 
+            var cityName = ""
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses: List<Address> = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+            if (addresses.isNotEmpty()) {
+                cityName = addresses[0].getAddressLine(0) ?: ""
+            }
+
             googleMap.animateCamera(
                 CameraUpdateFactory.newLatLng(it),
                 object : GoogleMap.CancelableCallback {
                     override fun onFinish() {
                         findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                            "lat_lon", Pair(it.latitude, it.longitude)
+                            "location",
+                            Triple(cityName, it.latitude.toString(), it.longitude.toString())
                         )
                         findNavController().popBackStack()
                     }
 
-                    override fun onCancel() {}
+                    override fun onCancel() {
+                        /**do nothing*/
+                    }
                 })
         }
 

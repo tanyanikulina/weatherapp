@@ -5,17 +5,16 @@ import androidx.lifecycle.ViewModel
 import io.weatherapp.api.ApiRepository
 import io.weatherapp.api.Result
 import io.weatherapp.api.responses.ResponseWeatherModel
-import io.weatherapp.data.CurrentWeather
-import io.weatherapp.data.DailyWeather
-import io.weatherapp.data.HourlyWeather
-import io.weatherapp.data.WeatherRepository
+import io.weatherapp.data.*
+import io.weatherapp.models.CityModel
 import io.weatherapp.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class WeatherViewModel : ViewModel() {
+class WeatherViewModel(val pref: Preferences) : ViewModel() {
 
+    val cityName = MutableLiveData<String>()
     val currentWeather = MutableLiveData<CurrentWeather>()
     val dailyWeather = MutableLiveData<List<DailyWeather>>()
     val hourlyWeather = MutableLiveData<List<HourlyWeather>>()
@@ -24,10 +23,12 @@ class WeatherViewModel : ViewModel() {
     private val repo = WeatherRepository()
 
     init {
-        getWeatherLocation()
+        val city = pref.getCity()
+        cityName.postValue(city.name)
+        getWeatherLocation(city.lat, city.lon)
     }
 
-    fun getWeatherLocation(lat: Double = 48.450001, lon: Double = 34.98333) {
+    fun getWeatherLocation(lat: String, lon: String) {
 
         GlobalScope.launch {
             val resp = ApiRepository().getOnecallWeatherLocation(lat, lon)
@@ -48,6 +49,12 @@ class WeatherViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun saveNewCity(city: CityModel) {
+        pref.saveCity(city)
+        cityName.postValue(city.name)
+        getWeatherLocation(city.lat, city.lon)
     }
 
     private fun loadWeatherFromRepository() {

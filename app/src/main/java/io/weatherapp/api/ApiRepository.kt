@@ -12,15 +12,12 @@ class ApiRepository {
 
     val apiInterface by lazy { ApiFactory.generateApi() }
 
-    suspend fun getOnecallWeatherLocation(
-        lat: Double = 48.450001,
-        lon: Double = 34.98333
-    ): Result<Any>? {
+    suspend fun getOnecallWeatherLocation(lat: String, lon: String): Result<Any>? {
         val call: suspend () -> Response<ResponseWeatherModel> =
             {
                 val params = HashMap<String, String>()
-                params.put("lat", lat.toString())
-                params.put("lon", lon.toString())
+                params.put("lat", lat)
+                params.put("lon", lon)
                 params.put("appid", API_KEY)
                 params.put("units", "metric")
                 params.put("exclude", "minutely")

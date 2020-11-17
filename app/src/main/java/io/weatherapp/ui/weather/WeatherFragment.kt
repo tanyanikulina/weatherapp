@@ -9,11 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import io.weatherapp.R
 import io.weatherapp.data.CurrentWeather
+import io.weatherapp.data.Preferences
+import io.weatherapp.models.CityModel
 import io.weatherapp.ui.base.BaseFragment
+import io.weatherapp.ui.base.ViewModelFactory
 import io.weatherapp.utils.DateUtils
 import io.weatherapp.utils.DateUtils.DF_WEEK_DAY_MONTH
 import io.weatherapp.utils.ImageUtils
-import kotlinx.android.synthetic.main.weather_fragment.*
+import kotlinx.android.synthetic.main.fragment_weather.*
 
 class WeatherFragment : BaseFragment() {
 
@@ -29,17 +32,22 @@ class WeatherFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.weather_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_weather, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+
+        val sp = Preferences(requireContext())
+        viewModel = ViewModelProvider(this, ViewModelFactory(sp)).get(WeatherViewModel::class.java)
 
         rvDaily.adapter = dayAdapter
         rvHourly.adapter = hourAdapter
         pb.isVisible = true
 
+        viewModel.cityName.observe {
+            tvCityName.text = it
+        }
         viewModel.currentWeather.observe {
             pb.isVisible = false
             fillMainWeather(it)
@@ -79,18 +87,19 @@ class WeatherFragment : BaseFragment() {
     }
 
     private fun checkBackStack() {
-        var lat: Double
-        var lon: Double
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Pair<Double, Double>>(
-            "lat_lon"
+        var city: CityModel
+
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Triple<String, String, String>>(
+            "location"
         )
             ?.observe {
-                lat = it.first
-                lon = it.second
-                findNavController().currentBackStackEntry?.savedStateHandle?.remove<Double>("lat")
+                city = CityModel(it.first, it.second, it.third)
+                findNavController().currentBackStackEntry?.savedStateHandle?.remove<Triple<String, String, String>>(
+                    "location"
+                )
 
                 pb.isVisible = true
-                viewModel.getWeatherLocation(lat, lon)
+                viewModel.saveNewCity(city)
             }
     }
 

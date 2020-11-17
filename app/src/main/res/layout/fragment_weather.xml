@@ -16,15 +16,18 @@
 
         <TextView
             android:id="@+id/tvCityName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="Dnipro"
             android:textColor="@color/white"
             android:textSize="24sp"
             app:drawableStartCompat="@drawable/ic_location_on_24"
             app:drawableTint="@color/white"
+            app:layout_constraintEnd_toStartOf="@id/ivLocation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,14 +85,14 @@
             android:layout_marginTop="12dp"
             android:drawablePadding="16dp"
             android:paddingTop="18dp"
-            android:text="27°/19°"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:drawableStartCompat="@drawable/ic_temp"
             app:drawableTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvWind"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="27°/19°" />
 
         <TextView
             android:id="@+id/tvHumidity"
@@ -97,14 +100,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:drawablePadding="8dp"
-            android:text="33%"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:drawableStartCompat="@drawable/ic_humidity"
             app:drawableTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvWind"
-            app:layout_constraintTop_toBottomOf="@id/tvTemp" />
+            app:layout_constraintTop_toBottomOf="@id/tvTemp"
+            tools:text="33%" />
 
         <TextView
             android:id="@+id/tvWind"
@@ -113,14 +116,14 @@
             android:layout_marginTop="12dp"
             android:drawablePadding="8dp"
             android:paddingBottom="18dp"
-            android:text="5 м/сек"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:drawableStartCompat="@drawable/ic_wind"
             app:drawableTint="@color/white"
             app:layout_constraintEnd_toStartOf="@id/ivWind"
             app:layout_constraintStart_toEndOf="@id/ivMainWeather"
-            app:layout_constraintTop_toBottomOf="@id/tvHumidity" />
+            app:layout_constraintTop_toBottomOf="@id/tvHumidity"
+            tools:text="5 м/сек" />
 
         <ImageView
             android:id="@+id/ivWind"
