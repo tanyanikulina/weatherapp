@@ -20,9 +20,9 @@ class Preferences(val context: Context) {
     }
 
     fun getCity(): CityModel {
-        val name = sp.getString(CITY_NAME, "Dnipro") ?: ""
-        val lat = sp.getString(CITY_LAT, "48.450001") ?: ""
-        val lon = sp.getString(CITY_LON, "34.98333") ?: ""
+        val name = sp.getString(CITY_NAME, "Запорожье") ?: ""
+        val lat = sp.getString(CITY_LAT, "35.183331") ?: ""
+        val lon = sp.getString(CITY_LON, "47.816669") ?: ""
         return CityModel(name, lat, lon)
     }
 

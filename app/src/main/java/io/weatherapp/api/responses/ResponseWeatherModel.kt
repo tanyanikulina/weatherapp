@@ -68,7 +68,6 @@ data class DailyModel(
     , @field:Json(name = "rain") val rain: Float?
     , @field:Json(name = "snow") val snow: Float?
     , @field:Json(name = "weather") val weather: List<WeatherModel>?
-//    , @field:Json(name = "alerts") val alerts: List<AlertsModel>?
 )
 
 data class WeatherModel(

@@ -4,6 +4,8 @@ import android.app.Application
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
+const val REALM_NAME = "weatherapp.realm"
+
 class App : Application() {
 
     override fun onCreate() {
@@ -11,7 +13,7 @@ class App : Application() {
 
         Realm.init(this)
         val config = RealmConfiguration.Builder()
-            .name("weatherapp.realm")
+            .name(REALM_NAME)
             .schemaVersion(1)
             .build()
         Realm.setDefaultConfiguration(config)

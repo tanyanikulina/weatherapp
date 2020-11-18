@@ -12,7 +12,7 @@ class ApiRepository {
 
     val apiInterface by lazy { ApiFactory.generateApi() }
 
-    suspend fun getOnecallWeatherLocation(lat: String, lon: String): Result<Any>? {
+    suspend fun getWeatherLocation(lat: String, lon: String): Result<Any>? {
         val call: suspend () -> Response<ResponseWeatherModel> =
             {
                 val params = HashMap<String, String>()
@@ -22,7 +22,7 @@ class ApiRepository {
                 params.put("units", "metric")
                 params.put("exclude", "minutely")
 
-                apiInterface.getOnecallWeather(params)
+                apiInterface.getWeather(params)
             }
         return safetyCall(call)
     }

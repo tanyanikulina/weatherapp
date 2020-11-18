@@ -46,7 +46,7 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
     private fun getWeatherLocation(lat: String, lon: String) {
 
         scope.launch {
-            val resp = ApiRepository().getOnecallWeatherLocation(lat, lon)
+            val resp = ApiRepository().getWeatherLocation(lat, lon)
             when (resp) {
                 is Result.Success -> {
                     scope.launch(Dispatchers.Main) {
