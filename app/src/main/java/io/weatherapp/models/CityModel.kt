@@ -21,6 +21,10 @@ class CityModel(val name: String?, val lat: String?, val lon: String?) : Parcela
         return 0
     }
 
+    override fun toString(): String {
+        return name ?: ""
+    }
+
     companion object CREATOR : Parcelable.Creator<CityModel> {
         override fun createFromParcel(parcel: Parcel): CityModel {
             return CityModel(parcel)

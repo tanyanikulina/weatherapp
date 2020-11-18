@@ -5,4 +5,5 @@
     <string name="no_location">Не можем Вас найти :( Выберите место на карте самостоятельно</string>
     <string name="error_load">Не удалось загрузить новые данные :(</string>
     <string name="you_are_here">Вы здесь</string>
+    <string name="city_name">Название города</string>
 </resources>

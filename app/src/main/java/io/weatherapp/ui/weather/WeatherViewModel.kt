@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import io.weatherapp.api.ApiRepository
 import io.weatherapp.api.Result
 import io.weatherapp.api.responses.ResponseWeatherModel
-import io.weatherapp.data.AbstractWeather
-import io.weatherapp.data.HourlyWeather
-import io.weatherapp.data.Preferences
-import io.weatherapp.data.WeatherRepository
+import io.weatherapp.data.*
 import io.weatherapp.models.CityModel
 import io.weatherapp.models.DayModel
 import io.weatherapp.utils.SingleLiveEvent
@@ -26,6 +23,8 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
     val scope = CoroutineScope(coroutineContext)
 
     val cityName = MutableLiveData<String>()
+    val cityList = MutableLiveData<List<CityModel>>()
+
     val currentWeather = MutableLiveData<AbstractWeather>()
     val dailyWeather = MutableLiveData<List<DayModel>>()
     val hourlyWeather = MutableLiveData<List<HourlyWeather>>()
@@ -34,6 +33,11 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
     private val repo = WeatherRepository()
 
     init {
+
+        repo.initCities()?.let {
+            cityList.postValue(EntityToModelMapper().convertCities(it))
+        }
+
         val city = pref.getCity()
         cityName.postValue(city.name)
         getWeatherLocation(city.lat!!, city.lon!!)

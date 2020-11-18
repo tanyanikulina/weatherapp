@@ -16,6 +16,7 @@ import io.weatherapp.ui.base.ViewModelFactory
 import io.weatherapp.utils.DF_WEEK_DAY_MONTH
 import io.weatherapp.utils.DateUtils
 import io.weatherapp.utils.ImageUtils
+import io.weatherapp.utils.hideKeyboard
 import kotlinx.android.synthetic.main.fragment_weather.*
 
 const val LOCATION_ARG = "location"
@@ -29,6 +30,7 @@ class WeatherFragment : BaseFragment() {
     private lateinit var viewModel: WeatherViewModel
     private lateinit var dayAdapter: DayAdapter
     private lateinit var hourAdapter: HourAdapter
+    private lateinit var cityAdapter: CityAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +57,10 @@ class WeatherFragment : BaseFragment() {
         viewModel.cityName observe {
             tvCityName.text = it
         }
+        viewModel.cityList.observe {
+            cityAdapter = CityAdapter(it)
+            setupSearchCityField()
+        }
         viewModel.currentWeather observe {
             showLoading(false)
             fillMainWeather(it)
@@ -73,7 +79,10 @@ class WeatherFragment : BaseFragment() {
         ivLocation.setOnClickListener {
             findNavController().navigate(R.id.action_weatherFragment_to_mapsFragment)
         }
-
+        tvCityName.setOnClickListener {
+            tvCityName.isVisible = false
+            tilSearch.isVisible = true
+        }
         rlSwipe.setOnRefreshListener {
             showLoading(true)
             viewModel.refreshClicked()
@@ -97,6 +106,24 @@ class WeatherFragment : BaseFragment() {
         ivMainWeather.setImageDrawable(
             resources.getDrawable(ImageUtils.getWeatherRes(weather.receiveWeather()))
         )
+    }
+
+    private fun setupSearchCityField() {
+
+        ctvSearch.threshold = 3
+        ctvSearch.setAdapter(cityAdapter)
+        ctvSearch.setOnItemClickListener { parent, view, position, id ->
+
+            val city = cityAdapter.getItem(position)
+
+            tvCityName.text = city.name
+            tvCityName.isVisible = true
+            tilSearch.isVisible = false
+
+            ctvSearch.hideKeyboard()
+            showLoading(true)
+            viewModel.saveNewCity(city)
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

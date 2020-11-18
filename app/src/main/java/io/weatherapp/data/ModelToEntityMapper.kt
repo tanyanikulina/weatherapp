@@ -8,7 +8,7 @@ class ModelToEntityMapper {
 
     private val realm: Realm = Realm.getDefaultInstance()
 
-    fun convert(resp: ResponseWeatherModel) {
+    fun convertWeather(resp: ResponseWeatherModel) {
 
         realm.beginTransaction()
 
