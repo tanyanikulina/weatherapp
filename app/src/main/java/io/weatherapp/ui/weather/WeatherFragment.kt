@@ -13,10 +13,12 @@ import io.weatherapp.data.Preferences
 import io.weatherapp.models.CityModel
 import io.weatherapp.ui.base.BaseFragment
 import io.weatherapp.ui.base.ViewModelFactory
+import io.weatherapp.utils.DF_WEEK_DAY_MONTH
 import io.weatherapp.utils.DateUtils
-import io.weatherapp.utils.DateUtils.DF_WEEK_DAY_MONTH
 import io.weatherapp.utils.ImageUtils
 import kotlinx.android.synthetic.main.fragment_weather.*
+
+const val LOCATION_ARG = "location"
 
 class WeatherFragment : BaseFragment() {
 
@@ -50,17 +52,17 @@ class WeatherFragment : BaseFragment() {
         rvHourly.adapter = hourAdapter
         showLoading(true)
 
-        viewModel.cityName.observe {
+        viewModel.cityName observe {
             tvCityName.text = it
         }
-        viewModel.currentWeather.observe {
+        viewModel.currentWeather observe {
             showLoading(false)
             fillMainWeather(it)
         }
-        viewModel.dailyWeather.observe {
+        viewModel.dailyWeather observe {
             dayAdapter.setNewData(it)
         }
-        viewModel.hourlyWeather.observe {
+        viewModel.hourlyWeather observe {
             hourAdapter.setNewData(it)
         }
         viewModel.errorMsg observe {
@@ -107,12 +109,12 @@ class WeatherFragment : BaseFragment() {
     private fun checkBackStack() {
 
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<CityModel>(
-            "location"
+            LOCATION_ARG
         )
             ?.observe {
                 val city = CityModel(it.name, it.lat, it.lon)
                 findNavController().currentBackStackEntry?.savedStateHandle?.remove<CityModel>(
-                    "location"
+                    LOCATION_ARG
                 )
 
                 showLoading(true)

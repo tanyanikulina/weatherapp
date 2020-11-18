@@ -12,11 +12,18 @@ import io.weatherapp.data.WeatherRepository
 import io.weatherapp.models.CityModel
 import io.weatherapp.models.DayModel
 import io.weatherapp.utils.SingleLiveEvent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class WeatherViewModel(val pref: Preferences) : ViewModel() {
+
+    val parentJob = Job()
+    val coroutineContext: CoroutineContext
+        get() = parentJob + Dispatchers.Default
+    val scope = CoroutineScope(coroutineContext)
 
     val cityName = MutableLiveData<String>()
     val currentWeather = MutableLiveData<AbstractWeather>()
@@ -34,11 +41,11 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
 
     private fun getWeatherLocation(lat: String, lon: String) {
 
-        GlobalScope.launch {
+        scope.launch {
             val resp = ApiRepository().getOnecallWeatherLocation(lat, lon)
             when (resp) {
                 is Result.Success -> {
-                    GlobalScope.launch(Dispatchers.Main) {
+                    scope.launch(Dispatchers.Main) {
                         val answer = resp.data as ResponseWeatherModel
                         repo.saveNewWeather(answer)
                         loadWeatherFromRepository()
@@ -46,7 +53,7 @@ class WeatherViewModel(val pref: Preferences) : ViewModel() {
                 }
                 is Result.Error -> {
                     errorMsg.postValue(resp.errMsg)
-                    GlobalScope.launch(Dispatchers.Main) {
+                    scope.launch(Dispatchers.Main) {
                         loadWeatherFromRepository()
                     }
                 }

@@ -27,6 +27,8 @@ import io.weatherapp.R
 import io.weatherapp.models.CityModel
 import java.util.*
 
+const val LOCATION_ARG = "location"
+
 class MapsFragment : Fragment() {
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -53,7 +55,7 @@ class MapsFragment : Fragment() {
                     }
 
                     override fun onCancel() {
-                        /**do nothing*/
+                        /*do nothing*/
                     }
                 })
         }
@@ -151,14 +153,15 @@ class MapsFragment : Fragment() {
 
     private fun addMarkerForLocation(map: GoogleMap, lat: Double, lon: Double) {
         val myLocation = LatLng(lat, lon)
-        val myLocationMarker = MarkerOptions().position(myLocation).title("Marker in my location")
+        val myLocationMarker =
+            MarkerOptions().position(myLocation).title(getString(R.string.you_are_here))
         map.addMarker(myLocationMarker)
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 12.0f))
     }
 
     fun goBackWithParams(cityName: String, lat: Double, lon: Double) {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
-            "location", CityModel(cityName, lat.toString(), lon.toString())
+            LOCATION_ARG, CityModel(cityName, lat.toString(), lon.toString())
         )
         findNavController().popBackStack()
     }

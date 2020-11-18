@@ -4,4 +4,5 @@
     <string name="wind_speed">%1$s м/сек</string>
     <string name="no_location">Не можем Вас найти :( Выберите место на карте самостоятельно</string>
     <string name="error_load">Не удалось загрузить новые данные :(</string>
+    <string name="you_are_here">Вы здесь</string>
 </resources>

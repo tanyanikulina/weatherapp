@@ -39,7 +39,6 @@ class WeatherRepository {
 
     private fun clearDatabase() {
         realm.beginTransaction()
-//        val b = realm.where(TotalWeather::class.java).findAll().deleteAllFromRealm()
         realm.deleteAll()
         realm.commitTransaction()
     }

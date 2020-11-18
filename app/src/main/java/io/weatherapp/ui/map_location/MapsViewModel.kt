@@ -4,5 +4,6 @@ import androidx.lifecycle.ViewModel
 
 class MapsViewModel : ViewModel() {
 
+    /*just stub viewModel*/
 
 }

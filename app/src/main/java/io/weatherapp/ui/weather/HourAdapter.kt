@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.weatherapp.R
 import io.weatherapp.data.HourlyWeather
+import io.weatherapp.utils.DF_HOUR
 import io.weatherapp.utils.DateUtils
-import io.weatherapp.utils.DateUtils.DF_HOUR
 import io.weatherapp.utils.ImageUtils
 
 class HourAdapter() : RecyclerView.Adapter<HourAdapter.HourViewHolder>() {

@@ -10,8 +10,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import io.weatherapp.R
 import io.weatherapp.models.DayModel
+import io.weatherapp.utils.DF_DAY_OF_WEEK
 import io.weatherapp.utils.DateUtils
-import io.weatherapp.utils.DateUtils.DF_DAY_OF_WEEK
 import io.weatherapp.utils.ImageUtils
 
 class DayAdapter(val onDayClick: (position: Int) -> Unit) :
