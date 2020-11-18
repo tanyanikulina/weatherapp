@@ -16,14 +16,11 @@ object ApiFactory {
         val baseUrl = BASE_URL
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-//        val interceptorLog = CustomLogInterceptor()
-//        interceptorLog.level = CustomLogInterceptor.Level.BODY
         val client = OkHttpClient.Builder().apply {
             readTimeout(40, TimeUnit.SECONDS)
             writeTimeout(40, TimeUnit.SECONDS)
             connectTimeout(40, TimeUnit.SECONDS)
             addInterceptor(interceptor)
-//            addInterceptor(interceptorLog)
             addInterceptor { chain ->
                 val requestBuilder = chain.request().newBuilder()
                 val request = requestBuilder.build()

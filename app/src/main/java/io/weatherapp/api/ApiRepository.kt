@@ -21,26 +21,19 @@ class ApiRepository {
                 params.put("appid", API_KEY)
                 params.put("units", "metric")
                 params.put("exclude", "minutely")
-//                params.put("lang", "ru")
 
                 apiInterface.getOnecallWeather(params)
             }
         return safetyCall(call)
     }
 
-    @JvmSuppressWildcards
-    suspend fun <T : Any> safetyCall(
-        call: suspend () -> Response<T>,
-        requestPage: Int = PAGE_COMMON
-    ): Result<Any>? {
+    suspend fun <T : Any> safetyCall(call: suspend () -> Response<T>): Result<Any>? {
         var response: Result<Any>?
         try {
             val result: Response<T> = call.invoke()
             if (result.isSuccessful) {
                 response = Result.Success<T>(result.body()!!)
             } else {
-                //todo
-//                response = parseError(requestPage, result)
                 response = Result.Error(result.code(), result.toString())
             }
         } catch (e: Exception) {
