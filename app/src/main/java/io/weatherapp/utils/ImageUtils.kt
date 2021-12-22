@@ -9,8 +9,8 @@ object ImageUtils {
             "Thunderstorm" -> return R.drawable.ic_white_day_thunder
             "Rain" -> return R.drawable.ic_white_day_rain
             "Drizzle" -> return R.drawable.ic_white_day_shower
-            "Snow" -> return R.drawable.ic_white_day_shower
-            "Mist" -> return R.drawable.ic_white_day_cloudy
+            "Snow" -> return R.drawable.ic_snow_day
+            "Mist" -> return R.drawable.ic_white_cloudy
             "Clear" -> return R.drawable.ic_white_day_bright
             "Clouds" -> return R.drawable.ic_white_day_cloudy
         }
